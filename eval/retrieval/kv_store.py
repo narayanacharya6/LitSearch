@@ -3,19 +3,22 @@ import pickle
 from tqdm import tqdm
 from enum import Enum
 from typing import List, Tuple, Any
+from utils.utils import chunked
 
 class TextType(Enum):
     KEY = 1
     QUERY = 2
 
 class KVStore:
-    def __init__(self, index_name: str, index_type: str) -> None:
+    def __init__(self, index_name: str, index_type: str, encode_batch_size: int = 32) -> None:
         self.index_name = index_name
         self.index_type = index_type
 
         self.keys = []
         self.encoded_keys = []
         self.values = []
+
+        self.encode_batch_size: int = encode_batch_size
 
     def __len__(self) -> int:
         return len(self.keys)
@@ -41,7 +44,10 @@ class KVStore:
         for key, value in tqdm(key_value_pairs.items(), desc=f"Creating {self.index_name} index"):
             self.keys.append(key)
             self.values.append(value)
-        self.encoded_keys = self._encode_batch(self.keys, TextType.KEY)
+        
+        self.encoded_keys = []
+        for key_batch in tqdm(chunked(self.keys, self.encode_batch_size)):
+            self.encoded_keys.extend(self._encode_batch(key_batch, TextType.KEY))
 
     def query(self, query_text: str, n: int, return_keys: bool = False) -> List[Any]:
         encoded_query = self._encode(query_text, TextType.QUERY)

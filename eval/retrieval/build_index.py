@@ -1,6 +1,6 @@
 import os
 import argparse
-import datasets
+from datasets import load_dataset
 from typing import List
 from utils import utils
 from eval.retrieval.kv_store import KVStore
@@ -45,6 +45,9 @@ def create_index(args: argparse.Namespace) -> KVStore:
         else:
             raise ValueError("Invalid key")
         index = GRIT(index_name, raw_instruction)
+    elif args.index_type == "specter2":
+        from eval.retrieval.specter2 import SPECTER2
+        index = SPECTER2(index_name)
     else:
         raise ValueError("Invalid index type")
     return index
@@ -66,14 +69,14 @@ def create_kv_pairs(data: List[dict], key: str) -> dict:
     return kv_pairs
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--index_type", required=True) # bm25, instructor, e5, gtr, grit
+parser.add_argument("--index_type", required=True) # bm25, instructor, e5, gtr, grit, specter2
 parser.add_argument("--key", required=True), # title_absract, full_paper, paragraphs
 
 parser.add_argument("--dataset_path", required=False, default="princeton-nlp/LitSearch")
 parser.add_argument("--index_root_dir", required=False, default="retrieval_indices")
 args = parser.parse_args()
 
-corpus_data = datasets.load_dataset(args.dataset_path, "corpus_clean", split="full")
+corpus_data = load_dataset(args.dataset_path, "corpus_clean", split="full")
 index = create_index(args)
 kv_pairs = create_kv_pairs(corpus_data, args.key)
 index.create_index(kv_pairs)
