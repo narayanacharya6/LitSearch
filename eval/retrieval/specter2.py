@@ -5,7 +5,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from eval.retrieval.kv_store import KVStore
 from eval.retrieval.kv_store import TextType
 from utils import utils
+import torch
 
+DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 class SPECTER2(KVStore):
     def __init__(self, index_name: str, model_path: str = "allenai/specter2"):
@@ -22,11 +24,13 @@ class SPECTER2(KVStore):
             load_as="specter2_adhoc_query",
             set_active=True,
         )
+        self._query_model = self._query_model.to(DEVICE)
 
         self._model = AutoModel.from_pretrained("allenai/specter2_base")
         self._model.load_adapter(
             "allenai/specter2", source="hf", load_as="specter2", set_active=True
         )
+        self._model = self._model.to(DEVICE)
 
     def _encode_batch(
         self, texts: List[str], type: TextType, show_progress_bar: bool = True
@@ -38,7 +42,7 @@ class SPECTER2(KVStore):
             return_tensors="pt",
             return_token_type_ids=False,
             max_length=512,
-        )
+        ).to(DEVICE)
 
         if type == TextType.QUERY:
             outputs = self._query_model(**model_inputs)
@@ -56,5 +60,5 @@ class SPECTER2(KVStore):
 
     def load(self, path: str):
         super().load(path)
-        self.init()
+        self._init()
         return self
