@@ -21,7 +21,7 @@ class BM25(KVStore):
     def _encode_batch(self, texts: str, type: TextType, show_progress_bar: bool = True) -> List[str]:
         # lowercase, tokenize, remove stopwords, and stem
         tokens_list = []
-        for text in tqdm(texts, disable=not show_progress_bar):
+        for text in texts:
             tokens = self._tokenizer(text.lower())
             tokens = [token for token in tokens if token not in self._stop_words]
             tokens = [self._stemmer(token) for token in tokens]
