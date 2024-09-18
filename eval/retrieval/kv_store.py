@@ -10,7 +10,7 @@ class TextType(Enum):
     QUERY = 2
 
 class KVStore:
-    def __init__(self, index_name: str, index_type: str, encode_batch_size: int = 8) -> None:
+    def __init__(self, index_name: str, index_type: str, encode_batch_size: int = 24) -> None:
         self.index_name = index_name
         self.index_type = index_type
 

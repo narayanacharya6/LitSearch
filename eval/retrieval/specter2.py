@@ -16,19 +16,19 @@ class SPECTER2(KVStore):
         self._init()
 
     def _init(self):
-        self._tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_base")
-        self._query_model = AutoModel.from_pretrained("allenai/specter2_base")
-        self._query_model.load_adapter(
-            "allenai/specter2_adhoc_query",
-            source="hf",
-            load_as="specter2_adhoc_query",
-            set_active=True,
-        )
-        self._query_model = self._query_model.to(DEVICE)
+        self._tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_aug2023refresh_base")
+        # self._query_model = AutoModel.from_pretrained("allenai/specter2_base")
+        # self._query_model.load_adapter(
+        #     "allenai/specter2_adhoc_query",
+        #     source="hf",
+        #     load_as="specter2_adhoc_query",
+        #     set_active=True,
+        # )
+        # self._query_model = self._query_model.to(DEVICE)
 
-        self._model = AutoModel.from_pretrained("allenai/specter2_base")
+        self._model = AutoModel.from_pretrained("allenai/specter2_aug2023refresh_base")
         self._model.load_adapter(
-            "allenai/specter2", source="hf", load_as="specter2", set_active=True
+            "allenai/specter2_aug2023refresh", source="hf", load_as="specter2_proximity", set_active=True
         )
         self._model = self._model.to(DEVICE)
 
@@ -44,13 +44,14 @@ class SPECTER2(KVStore):
             max_length=512,
         ).to(DEVICE)
 
-        if type == TextType.QUERY:
-            outputs = self._query_model(**model_inputs)
-        elif type == TextType.KEY:
-            outputs = self._model(**model_inputs)
-        else:
-            raise RuntimeError()
+        # if type == TextType.QUERY:
+        #     outputs = self._query_model(**model_inputs)
+        # elif type == TextType.KEY:
+        #     outputs = self._model(**model_inputs)
+        # else:
+        #     raise RuntimeError()
 
+        outputs = self._model(**model_inputs)
         return outputs.last_hidden_state[:, 0, :].detach().cpu().tolist()
 
     def _query(self, encoded_query: Any, n: int) -> List[int]:
