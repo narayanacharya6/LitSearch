@@ -25,6 +25,9 @@ def load_index(index_path: str) -> KVStore:
     elif index_type == "specter2":
         from eval.retrieval.specter2 import SPECTER2
         index = SPECTER2(None, None).load(index_path)
+    elif index_type == "specter2_mxbai_rerank":
+        from eval.retrieval.specter2_mxbai_rerank import SPECTER2_MXBAI_RERANK
+        index = SPECTER2_MXBAI_RERANK(None, None).load(index_path)
     else:
         raise ValueError("Invalid index type")
     return index
@@ -32,7 +35,7 @@ def load_index(index_path: str) -> KVStore:
 parser = argparse.ArgumentParser()
 parser.add_argument("--index_name", type=str, required=True)
 
-parser.add_argument("--top_k", type=int, required=False, default=200)
+parser.add_argument("--top_k", type=int, required=False, default=20)
 parser.add_argument("--retrieval_results_root_dir", type=str, required=False, default="results/retrieval")
 parser.add_argument("--index_root_dir", type=str, required=False, default="retrieval_indices")
 parser.add_argument("--dataset_path", required=False, default="princeton-nlp/LitSearch")

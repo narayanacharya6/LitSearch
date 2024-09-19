@@ -2,7 +2,7 @@ import os
 import pickle
 from tqdm import tqdm
 from enum import Enum
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Optional
 from utils.utils import chunked
 
 class TextType(Enum):
@@ -51,7 +51,7 @@ class KVStore:
 
     def query(self, query_text: str, n: int, return_keys: bool = False) -> List[Any]:
         encoded_query = self._encode(query_text, TextType.QUERY)
-        indices = self._query(encoded_query, n)
+        indices = self._query(encoded_query, n, query_text)
         if return_keys:
             results = [(self.keys[i], self.values[i]) for i in indices]
         else:

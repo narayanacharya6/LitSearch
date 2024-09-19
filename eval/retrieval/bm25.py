@@ -2,7 +2,7 @@ import nltk
 import numpy as np
 from tqdm import tqdm
 from rank_bm25 import BM25Okapi
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Optional
 from eval.retrieval.kv_store import KVStore
 from eval.retrieval.kv_store import TextType
 
@@ -28,7 +28,7 @@ class BM25(KVStore):
             tokens_list.append(tokens)
         return tokens_list
 
-    def _query(self, encoded_query: List[str], n: int) -> List[int]:
+    def _query(self, encoded_query: List[str], n: int, query_text: Optional[str] = None) -> List[int]:
         top_indices = np.argsort(self.index.get_scores(encoded_query))[::-1][:n].tolist()
         return top_indices
 

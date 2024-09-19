@@ -1,12 +1,14 @@
-datasets==2.20.0
+datasets
 numpy==1.23.5
-torch==1.13.1
-adapter-transformers>=3.2,<3.3
-transformers>=4.27,<4.28
-huggingface_hub>=0.21.2
-openai==1.33.0
-scikit-learn==1.5.2
+# torch==1.13.1
+# adapter-transformers>=3.2,<3.3
+# transformers>=4.27,<4.28
+adapters
+huggingface_hub
+openai
+scikit-learn
 tabulate
 # gritlm==1.0.2
 nltk<3.9
 rank-bm25==0.2.2
+sentence-transformers

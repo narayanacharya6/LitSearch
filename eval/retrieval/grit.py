@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List, Any
+from typing import List, Any, Optional
 from sklearn.metrics.pairwise import cosine_similarity
 from gritlm import GritLM
 from eval.retrieval.kv_store import KVStore
@@ -23,7 +23,7 @@ class GRIT(KVStore):
     def _encode_batch(self, texts: List[str], type: TextType, show_progress_bar: bool = True) -> List[Any]:
         return self._model.encode(texts, batch_size=256, instruction=self._get_instruction(type), show_progress_bar=show_progress_bar).astype(np.float16)
     
-    def _query(self, encoded_query: Any, n: int) -> List[int]:
+    def _query(self, encoded_query: Any, n: int, query_text: Optional[str] = None) -> List[int]:
         try:
             cosine_similarities = cosine_similarity([encoded_query], self.encoded_keys)[0]
         except:

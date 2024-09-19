@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List, Any
+from typing import List, Any, Optional
 from sklearn.metrics.pairwise import cosine_similarity
 from InstructorEmbedding import INSTRUCTOR
 from utils import utils
@@ -26,7 +26,7 @@ class Instructor(KVStore):
         texts = [self._format_text(text, type) for text in texts]
         return self._model.encode(texts, batch_size=128, normalize_embeddings=True, show_progress_bar=show_progress_bar).astype(np.float16)
     
-    def _query(self, encoded_query: Any, n: int) -> List[int]:
+    def _query(self, encoded_query: Any, n: int, query_text: Optional[str] = None) -> List[int]:
         cosine_similarities = cosine_similarity([encoded_query], self.encoded_keys)[0]
         top_indices = cosine_similarities.argsort()[-n:][::-1]
         return top_indices

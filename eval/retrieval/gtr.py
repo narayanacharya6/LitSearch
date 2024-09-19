@@ -1,6 +1,6 @@
 import sentence_transformers
 import numpy as np
-from typing import List, Any
+from typing import List, Any, Optional
 from sklearn.metrics.pairwise import cosine_similarity
 from eval.retrieval.kv_store import KVStore
 from eval.retrieval.kv_store import TextType
@@ -15,7 +15,7 @@ class GTR(KVStore):
     def _encode_batch(self, texts: List[str], type: TextType, show_progress_bar: bool = True) -> List[Any]:
         return self._model.encode(texts, batch_size=256, show_progress_bar=show_progress_bar).astype(np.float16)
     
-    def _query(self, encoded_query: Any, n: int) -> List[int]:
+    def _query(self, encoded_query: Any, n: int, query_text: Optional[str] = None) -> List[int]:
         cosine_similarities = cosine_similarity([encoded_query], self.encoded_keys)[0]
         top_indices = cosine_similarities.argsort()[-n:][::-1]
         return top_indices

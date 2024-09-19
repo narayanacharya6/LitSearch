@@ -48,6 +48,9 @@ def create_index(args: argparse.Namespace) -> KVStore:
     elif args.index_type == "specter2":
         from eval.retrieval.specter2 import SPECTER2
         index = SPECTER2(index_name)
+    elif args.index_type == "specter2_mxbai_rerank":
+        from eval.retrieval.specter2_mxbai_rerank import SPECTER2_MXBAI_RERANK
+        index = SPECTER2_MXBAI_RERANK(index_name)
     else:
         raise ValueError("Invalid index type")
     return index
