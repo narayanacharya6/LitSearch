@@ -66,7 +66,7 @@ def run(file_name, top_k):
         print()
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--file_name", type=str, required=False, default='results/retrieval/LitSearch.title_abstract.specter2.prox_aug2023.jsonl')
+parser.add_argument("--file_name", type=str, required=False, default='results/retrieval/LitSearch.title_abstract.specter2_mxbai_rerank.jsonl')
 parser.add_argument("--top_k", type=lambda x: [int(y) for y in x.split(',')], required=False, default='5,20')
 
 args = parser.parse_args()

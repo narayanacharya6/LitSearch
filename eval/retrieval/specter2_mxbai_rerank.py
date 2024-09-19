@@ -34,7 +34,7 @@ class SPECTER2_MXBAI_RERANK(KVStore):
         )
         self._model = self._model.to(DEVICE)
 
-        self._ce_model = CrossEncoder("mixedbread-ai/mxbai-rerank-large-v1", device=DEVICE)
+        self._ce_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-12-v2", device=DEVICE)
 
     def _encode_batch(
         self, texts: List[str], type: TextType, show_progress_bar: bool = True
@@ -63,7 +63,7 @@ class SPECTER2_MXBAI_RERANK(KVStore):
         top_indices = cosine_similarities.argsort()[-n:][::-1]
 
         all_scores = []
-        batch_size = 8
+        batch_size = n
         for batch_index, top_indices_batch in enumerate(utils.chunked(top_indices, batch_size)):
             keys = [self.keys[i] for i in top_indices_batch]
             results = self._ce_model.rank(query_text, keys)

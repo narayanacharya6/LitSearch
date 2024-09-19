@@ -35,7 +35,7 @@ def load_index(index_path: str) -> KVStore:
 parser = argparse.ArgumentParser()
 parser.add_argument("--index_name", type=str, required=True)
 
-parser.add_argument("--top_k", type=int, required=False, default=20)
+parser.add_argument("--top_k", type=int, required=False, default=200)
 parser.add_argument("--retrieval_results_root_dir", type=str, required=False, default="results/retrieval")
 parser.add_argument("--index_root_dir", type=str, required=False, default="retrieval_indices")
 parser.add_argument("--dataset_path", required=False, default="princeton-nlp/LitSearch")
