@@ -10,6 +10,9 @@ def load_index(index_path: str) -> KVStore:
     if index_type == "bm25":
         from eval.retrieval.bm25 import BM25
         index = BM25(None).load(index_path)
+    if index_type == "bm25_mxbai_rerank":
+        from eval.retrieval.bm25_mxbai_rerank import BM25_MXBAI_RERANK
+        index = BM25_MXBAI_RERANK(None).load(index_path)
     elif index_type == "instructor":
         from eval.retrieval.instructor import Instructor
         index = Instructor(None, None, None).load(index_path)

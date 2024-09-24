@@ -34,7 +34,7 @@ class SPECTER2_MXBAI_RERANK(KVStore):
         )
         self._model = self._model.to(DEVICE)
 
-        self._ce_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-12-v2", device=DEVICE)
+        self._ce_model = CrossEncoder("mixedbread-ai/mxbai-rerank-large-v1", device=DEVICE)
 
     def _encode_batch(
         self, texts: List[str], type: TextType, show_progress_bar: bool = True

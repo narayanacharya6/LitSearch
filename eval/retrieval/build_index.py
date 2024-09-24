@@ -14,6 +14,9 @@ def create_index(args: argparse.Namespace) -> KVStore:
     if args.index_type == "bm25":
         from eval.retrieval.bm25 import BM25
         index = BM25(index_name)
+    elif args.index_type == "bm25_mxbai_rerank":
+        from eval.retrieval.bm25_mxbai_rerank import BM25_MXBAI_RERANK
+        index = BM25_MXBAI_RERANK(index_name)
     elif args.index_type == "instructor":
         from eval.retrieval.instructor import Instructor
         if args.key == "title_abstract":
